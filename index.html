@@ -5,19 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Optical Transfer — fountain-coded QR file transfer</title>
     <link rel="stylesheet" href="./shared/style.css" />
+    <style>
+      .menu-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        max-width: 320px;
+        margin: 50px auto;
+      }
+      .btn {
+        display: block;
+        text-align: center;
+        padding: 16px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 6px;
+        background: #1a1a1a;
+        color: #fff;
+        border: 1px solid #333;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        transition: background 0.2s, border-color 0.2s;
+      }
+      .btn:hover {
+        background: #2a2a2a;
+        border-color: #555;
+      }
+      .btn-send {
+        border-color: #0056b3;
+        background: #004080;
+      }
+      .btn-send:hover {
+        background: #0056b3;
+      }
+    </style>
   </head>
   <body>
-    <h1>DECIMEN <small>— Fountain QR File Transfer (PoC)</small></h1>
-    <p class="hint">
-      Send a file between two devices using nothing but a screen and a camera.
-      Open <a href="./send/index.html">send</a> on the device with the file (a laptop is
-      ideal) and <a href="./receive/index.html">receive</a> on a phone, then point the
-      phone's camera at the flickering code.
-    </p>
-    <p class="hint">
-      No network path between the devices is used — the payload travels as
-      light. Fountain coding means the receiver can drop any frames, in any
-      order, and still reconstruct the file.
-    </p>
+    <h1>DECIMEN <small>— Fountain QR File Transfer</small></h1>
+    
+    <div class="menu-container">
+      <a href="./send/index.html" class="btn btn-send">Send File</a>
+      <a href="./receive/index.html" class="btn">Receive File</a>
+    </div>
   </body>
 </html>
