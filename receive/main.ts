@@ -10,6 +10,7 @@
 
 import { LTDecoder } from "../shared/fountain";
 import { fnv1a, parseFrame } from "../shared/protocol";
+import { Filesystem, Directory } from "@capacitor/filesystem";
 
 const OVERHEAD_EST = 1.18; // expected frames ≈ K × this (robust-soliton ε)
 
@@ -145,7 +146,6 @@ function onDecoded(bytes: Uint8Array) {
   if (!parsed || done) return;
   const { header, block } = parsed;
   
-  // Capture the filename from the protocol header
   if (header.fileName) {
     currentFileName = header.fileName;
   }
@@ -168,7 +168,19 @@ function onDecoded(bytes: Uint8Array) {
   }
 }
 
-function finish(payload: Uint8Array, hashOk: boolean, seconds: number, totalLen: number) {
+function uint8ArrayToBase64(bytes: Uint8Array): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const res = reader.result as string;
+      resolve(res.split(',')[1] || '');
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(new Blob([bytes]));
+  });
+}
+
+async function finish(payload: Uint8Array, hashOk: boolean, seconds: number, totalLen: number) {
   done = true;
   captureGen++;
   stream?.getTracks().forEach((t) => t.stop());
@@ -180,57 +192,53 @@ function finish(payload: Uint8Array, hashOk: boolean, seconds: number, totalLen:
   
   const heading = document.createElement("div");
   heading.className = "done";
-  heading.textContent = "Transfer Complete!";
-  
-  // Create a proper File object from the payload Blob for native mobile sharing
-  const blob = new Blob([payload as BlobPart]);
-  const file = new File([blob], currentFileName, { type: "application/octet-stream" });
+  heading.textContent = "Transfer Complete! Saving file automatically...";
+  result.append(heading);
 
-  const saveButton = document.createElement("button");
-  saveButton.className = "download-btn";
-  saveButton.textContent = `Save / Share ${currentFileName}`;
-  saveButton.style.display = "inline-block";
-  saveButton.style.marginTop = "15px";
-  saveButton.style.padding = "12px 24px";
-  saveButton.style.background = "#2563eb";
-  saveButton.style.color = "#ffffff";
-  saveButton.style.border = "none";
-  saveButton.style.borderRadius = "8px";
-  saveButton.style.fontWeight = "bold";
-  saveButton.style.cursor = "pointer";
+  try {
+    const base64Data = await uint8ArrayToBase64(payload);
+    
+    // Save natively to device documents
+    await Filesystem.writeFile({
+      path: currentFileName,
+      data: base64Data,
+      directory: Directory.Documents,
+      recursive: true,
+    });
 
-  saveButton.onclick = async () => {
-    // Try using native mobile share sheet (triggers Android save/share dialog)
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        await navigator.share({
-          files: [file],
-          title: 'Received File',
-          text: `Here is your received file: ${currentFileName}`,
-        });
-        return;
-      } catch (err) {
-        if ((err as Error).name !== 'AbortError') {
-          console.error('Share failed:', err);
-        }
-      }
-    }
+    heading.textContent = `Saved successfully: Documents/${currentFileName}`;
 
-    // Fallback for browsers / desktop
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = currentFileName;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
+    const uriResult = await Filesystem.getUri({
+      directory: Directory.Documents,
+      path: currentFileName,
+    });
 
-  result.append(heading, saveButton);
-  
-  // Automatically pop open the save/share sheet when complete
-  saveButton.click();
+    // Add a manual open button as a fallback
+    const openButton = document.createElement("button");
+    openButton.className = "download-btn";
+    openButton.textContent = `Open ${currentFileName}`;
+    openButton.style.display = "block";
+    openButton.style.marginTop = "15px";
+    openButton.style.padding = "12px 24px";
+    openButton.style.background = "#2563eb";
+    openButton.style.color = "#ffffff";
+    openButton.style.border = "none";
+    openButton.style.borderRadius = "8px";
+    openButton.style.fontWeight = "bold";
+    openButton.style.cursor = "pointer";
+
+    openButton.onclick = () => {
+      window.open(uriResult.uri, '_blank');
+    };
+    result.append(openButton);
+
+    // Automatically trigger opening the file
+    window.open(uriResult.uri, '_blank');
+
+  } catch (err) {
+    console.error('Auto-save error:', err);
+    heading.textContent = `Error saving file: ${err instanceof Error ? err.message : String(err)}`;
+  }
 }
 
 function updateStats() {
