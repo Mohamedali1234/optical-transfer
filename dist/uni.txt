@@ -1,0 +1,612 @@
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=cairo                                                                                                                                                                                                                     
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=242424                                                                                                                                                                                                                     
+POSSIBLE PASSWORD FIELD FOUND: password=test                                                                                                                                                                                                
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=28                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Mamdouh@77..                                                                                                                                                                                        
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020152                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=SBB*pYz58Hk4kcU                                                                                                                                                                                     
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=28                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Mamdouh@77...                                                                                                                                                                                       
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020152                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=SBB*pYz58Hk4kcU                                                                                                                                                                                     
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020021                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=M0staf123@                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020021                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=M0staf123@                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020021                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=M0staf123@                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020021                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=M0staf123@                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020089                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=EmanMagdy111                                                                                                                                                                                        
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020089                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=EmanMagdy111                                                                                                                                                                                        
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020172                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=abdulraouf@2006                                                                                                                                                                                     
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020141                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Zsherif13**                                                                                                                                                                                         
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020141                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Zsherif13**                                                                                                                                                                                         
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020141                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Zsherif13**                                                                                                                                                                                         
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+[18/Oct/2025 00:51:33] 
+[18/Oct/2025 00:51:33] 
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020120                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=dsyaah195@                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020120                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=dsyaah195@                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020120                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=dsyaah195@                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020120                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=dsyaah195@                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020120                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=dsyaah195@                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020120                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=dsyaah195@                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020120                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=dsyaah195@                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020120                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=dsyaah195@                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020120                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=dsyaah195@                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020149                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Salma@@2025                                                                                                                                                                                         
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020149                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Salma@@2025                                                                                                                                                                                         
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020120                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=dsyaah195@                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020221                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Laila235                                                                                                                                                                                            
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020221                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Laila235                                                                                                                                                                                            
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020221                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Laila235                                                                                                                                                                                            
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+ 
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020187                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=XV_eLszb9r8A2s9                                                                                                                                                                                     
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020345                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Hisham2225                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020345                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Hisham2226                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020293                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Xx6Dphj@V6S*CxY                                                                                                                                                                                     
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020187                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=XV+_eLszb9r8A2s9                                                                                                                                                                                    
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020042                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=cbim.170                                                                                                                                                                                            
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020042                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=cbim.170                                                                                                                                                                                            
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020042                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=cbim.170                                                                                                                                                                                            
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=others                                                                                                                                                                                                                    
+PARAM: otherUniv=MNU                                                                                                                                                                                                                        
+PARAM: studentId=24020087                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=ENgy@2000                                                                                                                                                                                           
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020186                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Ab11564300900                                                                                                                                                                                       
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020186                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Ab11564300900                                                                                                                                                                                       
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=29                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=mohamed+taha                                                                                                                                                                                        
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020284                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=mahhhhmod1234@                                                                                                                                                                                      
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+mody00[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020284                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=mahhhhmod1234@                                                                                                                                                                                      
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+ 
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=29                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=fgze!072                                                                                                                                                                                            
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=20250476                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=PsolyP86                                                                                                                                                                                            
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=25020476                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=PsolyP86                                                                                                                                                                                            
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=25020476                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=PsolyP86                                                                                                                                                                                            
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020289                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=HelloLove123                                                                                                                                                                                        
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020289                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=30511151500721                                                                                                                                                                                      
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=30603251202444                                                                                                                                                                                                             
+POSSIBLE PASSWORD FIELD FOUND: password=PsolyP86                                                                                                                                                                                            
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+ 
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020289                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=HelloLove123                                                                                                                                                                                        
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=25                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Kareem30102006                                                                                                                                                                                      
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+ 
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=22                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=p3auuF206@$4U@N                                                                                                                                                                                     
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=22                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=p3auuF206@$4U@N                                                                                                                                                                                     
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+ 
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020104                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Jana_22$_                                                                                                                                                                                           
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+ 
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020104                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Jana_22$_                                                                                                                                                                                           
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=22                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=pjfp_133                                                                                                                                                                                            
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=22                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=pjfp_133                                                                                                                                                                                            
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020192                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Alimaged123                                                                                                                                                                                         
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020192                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Alimaged123                                                                                                                                                                                         
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020192                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=AliElbialy123                                                                                                                                                                                       
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020192                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=AliElbialy123                                                                                                                                                                                       
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                            
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=20                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Zena2006!                                                                                                                                                                                           
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.                                                                                                                                                                               
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=others                                                                                                                                                                                                                    
+PARAM: otherUniv=Mansoura+national+university+                                                                                                                                                                                              
+PARAM: studentId=24020188                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Basbosa_2006@                                                                                                                                                                                       
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.
+
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=others                                                                                                                                                                                                                    
+PARAM: otherUniv=Mansoura+national+university+                                                                                                                                                                                              
+PARAM: studentId=24020310                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=M.2005gabr                                                                                                                                                                                          
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT. 
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020345                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=cvkg.323                                                                                                                                                                                            
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura                                                                                                                                                                                                                  
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020160                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Ss$12345678                                                                                                                                                                                         
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.
+
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=22030187                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Tahaahmed44@*                                                                                                                                                                                       
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.
+
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020365                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Yousefy@20252025                                                                                                                                                                                    
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.
+
+[*] WE GOT A HIT! Printing the output:
+PARAM: university=mansoura_national                                                                                                                                                                                                         
+PARAM: otherUniv=                                                                                                                                                                                                                           
+PARAM: studentId=24020438                                                                                                                                                                                                                   
+POSSIBLE PASSWORD FIELD FOUND: password=Mohamed79722944@                                                                                                                                                                                    
+[*] WHEN YOU'RE FINISHED, HIT CONTROL-C TO GENERATE A REPORT.
