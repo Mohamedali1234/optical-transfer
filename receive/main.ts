@@ -176,7 +176,8 @@ function uint8ArrayToBase64(bytes: Uint8Array): Promise<string> {
       resolve(res.split(',')[1] || '');
     };
     reader.onerror = reject;
-    reader.readAsDataURL(new Blob([bytes]));
+    // Fix: pass the buffer view cleanly to resolve TypeScript checks
+    reader.readAsDataURL(new Blob([bytes.buffer as ArrayBuffer]));
   });
 }
 
