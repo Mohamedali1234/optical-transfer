@@ -1,5 +1,5 @@
 // Sender: turn a file into an endless fountain-coded QR stream.
-// Supports 1, 2, 3, or 4 simultaneous QR code lanes for max throughput.
+// Supports 1, 2, 3, or 4 simultaneous QR code lanes with a responsive phone-friendly grid.
 
 import QRCode from "qrcode";
 import { LTEncoder } from "../shared/fountain";
@@ -87,32 +87,53 @@ async function startStream() {
 
   let version: number | undefined; 
   let modules = 0;
+  
+  // Responsive grid variables
   let scale = 1;
+  let cols = 1;
+  let rows = 1;
+  let positions: {x: number, y: number}[] = [];
+
   const staging = document.createElement("canvas");
   const queue: ImageData[] = [];
   let nextSeq = 0;
-
-  // Grid dimensions based on lanes
-  const cols = lanes === 1 ? 1 : 2;
-  const rows = lanes > 2 ? 2 : (lanes === 2 ? 1 : 1);
 
   const sizeCanvas = () => {
     const dpr = window.devicePixelRatio || 1;
     const total = modules + 2 * MARGIN;
     
+    const isPortrait = window.innerHeight > window.innerWidth;
+
+    // Smart layout based on phone orientation
+    if (lanes === 1) {
+      cols = 1; 
+      rows = 1;
+    } else if (lanes === 2) {
+      cols = isPortrait ? 1 : 2; // Stack vertically if phone is upright
+      rows = isPortrait ? 2 : 1; 
+    } else {
+      cols = 2; // 3 or 4 lanes always form a 2x2 grid
+      rows = 2; 
+    }
+
+    // Build the position map dynamically based on rows and columns
+    positions = [];
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        positions.push({ x, y });
+      }
+    }
+    
     // Maximize space: allow stretching up to 95% of the physical window dimensions
     const maxW = window.innerWidth * 0.95;
     const maxH = window.innerHeight * 0.95;
 
-    // Treat the display size slider as the max size PER QR CODE, not the whole grid
     const budgetW = Math.min(maxW, displayPx * cols);
     const budgetH = Math.min(maxH, displayPx * rows);
 
-    // Calculate maximum scale possible for width and height independently
     const scaleX = (budgetW * dpr) / (cols * total);
     const scaleY = (budgetH * dpr) / (rows * total);
     
-    // Pick the smaller scale so nothing gets clipped, but max out the allowed axis
     scale = Math.max(1, Math.floor(Math.min(scaleX, scaleY)));
     
     staging.width = total;
@@ -138,7 +159,7 @@ async function startStream() {
       modules = qr.modules.size;
       sizeCanvas();
       
-      // Hook into window resize to dynamically update the size when rotating a phone or dragging a window
+      // Auto-resize when you rotate your phone!
       window.addEventListener('resize', sizeCanvas);
 
       specs.textContent =
@@ -164,11 +185,10 @@ async function startStream() {
 
   const pump = () => {
     if (gen !== generation) {
-      window.removeEventListener('resize', sizeCanvas); // Cleanup listener on restart
+      window.removeEventListener('resize', sizeCanvas);
       return;
     }
     try {
-      // Buffer enough frames for all lanes simultaneously
       while (queue.length < LOOKAHEAD * lanes) queue.push(makeFrame());
     } catch (err) {
       specs.textContent = `✗ ${err instanceof Error ? err.message : String(err)}`;
@@ -186,7 +206,6 @@ async function startStream() {
     requestAnimationFrame(tick);
     if (now < nextAt) return;
     
-    // Make sure we have enough frames in the queue to fill our lanes
     if (queue.length < lanes) {
       nextAt = now + interval;
       return;
@@ -195,19 +214,11 @@ async function startStream() {
     const ctx = canvas.getContext("2d")!;
     ctx.imageSmoothingEnabled = false;
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height); // clear canvas
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const total = modules + 2 * MARGIN;
     
-    // Position offsets for up to 4 quadrants
-    const positions = [
-      { x: 0, y: 0 },         // Top-Left
-      { x: 1, y: 0 },         // Top-Right
-      { x: 0, y: 1 },         // Bottom-Left
-      { x: 1, y: 1 },         // Bottom-Right
-    ];
-
-    // Pop and draw `lanes` amount of frames onto the canvas grid
+    // Pop and draw `lanes` amount of frames onto the dynamic grid
     for (let i = 0; i < lanes; i++) {
       const img = queue.shift();
       if (!img) break;
@@ -215,7 +226,7 @@ async function startStream() {
       staging.getContext("2d")!.putImageData(img, 0, 0);
       
       const pos = positions[i];
-      if (!pos) break; // TypeScript fix applied here
+      if (!pos) break;
       
       const dx = pos.x * total * scale;
       const dy = pos.y * total * scale;
