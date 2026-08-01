@@ -1,5 +1,5 @@
 // Receiver: camera → WASM QR decode in workers → fountain decoder → file.
-// Supports multi-lane (1-4 QR codes per frame) and native auto-saving.
+// Includes hardware benchmarking to auto-tune optimal workers and capture resolution.
 
 import { LTDecoder } from "../shared/fountain";
 import { fnv1a, parseFrame } from "../shared/protocol";
@@ -8,6 +8,7 @@ import { Filesystem, Directory } from "@capacitor/filesystem";
 const OVERHEAD_EST = 1.18; // expected frames ≈ K × this (robust-soliton ε)
 
 const startBtn = document.getElementById("start") as HTMLButtonElement;
+const benchBtn = document.getElementById("benchmark") as HTMLButtonElement;
 const video = document.getElementById("video") as HTMLVideoElement;
 const preview = document.getElementById("preview")!;
 const stats = document.getElementById("stats")!;
@@ -24,7 +25,7 @@ let sessionId = 0;
 let startTs = 0;
 let captureGen = 0;
 let done = false;
-let currentFileName = "download.bin"; // Default fallback
+let currentFileName = "download.bin";
 
 const workers: Worker[] = [];
 const busy: boolean[] = [];
@@ -32,6 +33,77 @@ const captureTimes: number[] = [];
 const decodeTimes: number[] = [];
 
 startBtn.onclick = () => void start();
+benchBtn.onclick = () => void runBenchmark();
+
+// --- HARDWARE BENCHMARK ENGINE ---
+async function runBenchmark() {
+  benchBtn.disabled = true;
+  startBtn.disabled = true;
+  stats.textContent = "⚡ Running hardware benchmark... Please wait.";
+
+  const testWidth = 1280;
+  const testHeight = 960;
+  // Create a synthetic test image buffer
+  const dummyCanvas = document.createElement("canvas");
+  dummyCanvas.width = testWidth;
+  dummyCanvas.height = testHeight;
+  const ctx = dummyCanvas.getContext("2d")!;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, testWidth, testHeight);
+  const imgData = ctx.getImageData(0, 0, testWidth, testHeight);
+
+  // Test with 3 workers to gauge CPU throughput
+  const benchWorker = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
+  
+  const measureSpeed = (workersCount: number): Promise<number> => {
+    return new Promise((resolve) => {
+      let completed = 0;
+      const start = performance.now();
+      const iterations = 5;
+
+      benchWorker.onmessage = (e) => {
+        if (e.data.id === -1) return; // ignore warm-up
+        completed++;
+        if (completed >= iterations) {
+          const duration = performance.now() - start;
+          resolve(iterations / (duration / 1000)); // returns decodes per second
+        }
+      };
+
+      for (let i = 0; i < iterations; i++) {
+        benchWorker.postMessage({ id: i, buf: imgData.data.buffer.slice(0), w: testWidth, h: testHeight });
+      }
+    });
+  };
+
+  const score = await measureSpeed(3);
+  benchWorker.terminate();
+
+  // Auto-tune settings based on benchmark score (decodes per second)
+  const widthSelect = document.getElementById("cfg-width") as HTMLSelectElement;
+  const workerSelect = document.getElementById("cfg-workers") as HTMLSelectElement;
+
+  if (score > 25) {
+    // High-end device (Flagship phone)
+    widthSelect.value = "1920";
+    workerSelect.value = "3";
+    stats.textContent = `⚡ Benchmark complete: High-end hardware detected! Set to 1920px @ 3 workers.`;
+  } else if (score > 12) {
+    // Mid-range device
+    widthSelect.value = "1280";
+    workerSelect.value = "2";
+    stats.textContent = `⚡ Benchmark complete: Balanced profile selected (1280px @ 2 workers).`;
+  } else {
+    // Budget or older device (prevent overheating/lag)
+    widthSelect.value = "960";
+    workerSelect.value = "1";
+    stats.textContent = `⚡ Benchmark complete: Low-overhead profile selected (960px @ 1 worker).`;
+  }
+
+  benchBtn.disabled = false;
+  startBtn.disabled = false;
+}
+// ---------------------------------
 
 async function start() {
   if (!navigator.mediaDevices?.getUserMedia) {
@@ -43,10 +115,13 @@ async function start() {
   const captureWidth = Number((document.getElementById("cfg-width") as HTMLSelectElement).value);
   const captureFps = Number((document.getElementById("cfg-capfps") as HTMLSelectElement).value);
   const workerCount = Number((document.getElementById("cfg-workers") as HTMLSelectElement).value);
+  
   settings.style.display = "none";
   startBtn.style.display = "none";
+  benchBtn.style.display = "none";
   preview.style.display = "block";
   metricsEl.style.display = "grid";
+
   const base: MediaTrackConstraints = {
     facingMode: "environment",
     width: { ideal: captureWidth },
@@ -77,7 +152,6 @@ async function start() {
     const w = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
     const slot = i;
     w.onmessage = (e: MessageEvent) => {
-      // Look for the bytesList array (1 to 4 codes) instead of single bytes
       const { id, bytesList } = e.data as { id: number; bytesList: Uint8Array[] | null };
       if (id === -1) return; // warm-up
       busy[slot] = false;
@@ -126,7 +200,7 @@ function captureFrame() {
   if (!vw || !vh) return;
   captureTimes.push(performance.now());
   const slot = busy.indexOf(false);
-  if (slot === -1) return; // all workers busy — drop the frame, no harm done
+  if (slot === -1) return; // all workers busy — drop frame
   if (grab.width !== vw || grab.height !== vh) {
     grab.width = vw;
     grab.height = vh;
@@ -146,7 +220,6 @@ function onDecoded(bytes: Uint8Array) {
   if (!parsed || done) return;
   const { header, block } = parsed;
   
-  // Extract the file name from the protocol header
   if (header.fileName) {
     currentFileName = header.fileName;
   }
@@ -199,7 +272,6 @@ async function finish(payload: Uint8Array, hashOk: boolean, seconds: number, tot
   try {
     const base64Data = await uint8ArrayToBase64(payload);
     
-    // Save natively to device documents using the dynamically received file name
     await Filesystem.writeFile({
       path: currentFileName,
       data: base64Data,
@@ -214,7 +286,6 @@ async function finish(payload: Uint8Array, hashOk: boolean, seconds: number, tot
       path: currentFileName,
     });
 
-    // Add a manual open button as a fallback
     const openButton = document.createElement("button");
     openButton.className = "download-btn";
     openButton.textContent = `Open ${currentFileName}`;
@@ -233,7 +304,6 @@ async function finish(payload: Uint8Array, hashOk: boolean, seconds: number, tot
     };
     result.append(openButton);
 
-    // Automatically trigger opening the file
     window.open(uriResult.uri, '_blank');
 
   } catch (err) {
