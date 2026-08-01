@@ -1,12 +1,5 @@
 // Receiver: camera → WASM QR decode in workers → fountain decoder → file.
-//
-// Field lessons baked in:
-// - iOS treats `frameRate: {ideal: 60}` as a suggestion and delivers 30.
-//   Demand `exact` first (it works at 1280-wide), fall back to `ideal`.
-// - requestVideoFrameCallback chains survive a stopped stream and resume on
-//   the next one — a generation counter prevents zombie capture loops.
-// - Progress must track frames COLLECTED: LT peeling back-loads its solve
-//   cascade, so blocks-solved looks stalled and then teleports to done.
+// Supports multi-lane (1-4 QR codes per frame) and native auto-saving.
 
 import { LTDecoder } from "../shared/fountain";
 import { fnv1a, parseFrame } from "../shared/protocol";
@@ -79,14 +72,21 @@ async function start() {
   await video.play().catch(() => undefined);
   stats.textContent = `camera ${stream.getVideoTracks()[0]?.getSettings().width}×${stream.getVideoTracks()[0]?.getSettings().height}@${stream.getVideoTracks()[0]?.getSettings().frameRate} — searching for a stream…`;
 
+  // === MULTI-LANE WORKER SETUP ===
   for (let i = 0; i < workerCount; i++) {
     const w = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
     const slot = i;
     w.onmessage = (e: MessageEvent) => {
-      const { id, bytes } = e.data as { id: number; bytes: Uint8Array | null };
+      // Look for the bytesList array (1 to 4 codes) instead of single bytes
+      const { id, bytesList } = e.data as { id: number; bytesList: Uint8Array[] | null };
       if (id === -1) return; // warm-up
       busy[slot] = false;
-      if (bytes) onDecoded(bytes);
+      
+      if (bytesList && bytesList.length > 0) {
+        for (const bytes of bytesList) {
+          onDecoded(bytes);
+        }
+      }
     };
     workers.push(w);
     busy.push(false);
@@ -146,6 +146,7 @@ function onDecoded(bytes: Uint8Array) {
   if (!parsed || done) return;
   const { header, block } = parsed;
   
+  // Extract the file name from the protocol header
   if (header.fileName) {
     currentFileName = header.fileName;
   }
@@ -176,7 +177,6 @@ function uint8ArrayToBase64(bytes: Uint8Array): Promise<string> {
       resolve(res.split(',')[1] || '');
     };
     reader.onerror = reject;
-    // Fix: pass the buffer view cleanly to resolve TypeScript checks
     reader.readAsDataURL(new Blob([bytes.buffer as ArrayBuffer]));
   });
 }
@@ -199,7 +199,7 @@ async function finish(payload: Uint8Array, hashOk: boolean, seconds: number, tot
   try {
     const base64Data = await uint8ArrayToBase64(payload);
     
-    // Save natively to device documents
+    // Save natively to device documents using the dynamically received file name
     await Filesystem.writeFile({
       path: currentFileName,
       data: base64Data,
