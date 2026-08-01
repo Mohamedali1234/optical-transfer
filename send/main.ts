@@ -1,16 +1,5 @@
 // Sender: turn a file into an endless fountain-coded QR stream.
-//
-// Tuning notes from the experiments this PoC is distilled from:
-// - Frame payload sets the QR version; denser wins on goodput as long as the
-//   receiver can still decode it. 1465 bytes ≈ V27 is a safe middle ground
-//   for arbitrary monitors; 2953 (V40) is the ceiling and works phone-to-
-//   phone at close range.
-// - The mask pattern is pinned (any declared mask is valid to a decoder);
-//   this skips the spec's 8-way mask evaluation and speeds generation ~4×.
-// - Displays need each frame shown for ≥2 refresh cycles or captures catch
-//   the transition; 24 fps on a 60 Hz screen is comfortable.
-// - Error correction stays at L by default: the fountain layer already
-//   handles erasures, and a frame is either decoded whole or discarded.
+// Supports 1, 2, 3, or 4 simultaneous QR code lanes for max throughput.
 
 import QRCode from "qrcode";
 import { LTEncoder } from "../shared/fountain";
@@ -22,9 +11,8 @@ const LOOKAHEAD = 3;
 const canvas = document.getElementById("qr") as HTMLCanvasElement;
 const specs = document.getElementById("specs")!;
 
-// Custom file input replaces the old dropdown
 const cfgFile = document.getElementById("cfg-file") as HTMLInputElement;
-
+const cfgLanes = document.getElementById("cfg-lanes") as HTMLSelectElement;
 const cfgFps = document.getElementById("cfg-fps") as HTMLSelectElement;
 const cfgBytes = document.getElementById("cfg-bytes") as HTMLSelectElement;
 const cfgEcc = document.getElementById("cfg-ecc") as HTMLSelectElement;
@@ -33,9 +21,7 @@ const cfgSize = document.getElementById("cfg-size") as HTMLInputElement;
 const payloadCache = new Map<string, Uint8Array>();
 let generation = 0; // bumped on every restart; stale loops see it and die
 
-// Overloaded to accept an actual File object instead of just a URL string
 async function loadPayload(source: string | File): Promise<Uint8Array | null> {
-  // If it's a direct File upload, rip the bytes and return them instantly
   if (source instanceof File) {
     return new Uint8Array(await source.arrayBuffer());
   }
@@ -50,12 +36,11 @@ async function loadPayload(source: string | File): Promise<Uint8Array | null> {
 }
 
 async function main() {
-  // Re-bound all settings (including the new file picker) to trigger stream restarts
-  for (const el of [cfgFile, cfgFps, cfgBytes, cfgEcc, cfgSize]) {
+  // Re-bound all settings to trigger stream restarts
+  for (const el of [cfgFile, cfgLanes, cfgFps, cfgBytes, cfgEcc, cfgSize]) {
     el.addEventListener("change", () => void startStream());
   }
   
-  // Awaiting file upload instead of auto-starting
   specs.textContent = `Awaiting file upload...`;
   
   try {
@@ -67,7 +52,6 @@ async function main() {
 }
 
 async function startStream() {
-  // Ensure the user actually selected a file before we start pumping
   const file = cfgFile.files?.[0];
   if (!file) return;
 
@@ -79,8 +63,9 @@ async function startStream() {
     return;
   }
   
-  if (gen !== generation) return; // superseded while fetching
+  if (gen !== generation) return; 
   
+  const lanes = Number(cfgLanes.value);
   const txFps = Number(cfgFps.value);
   const frameBytes = Number(cfgBytes.value);
   const ecc = cfgEcc.value as "L" | "M" | "Q" | "H";
@@ -90,7 +75,6 @@ async function startStream() {
   const blockLen = frameBytes - HEADER_LEN;
   const encoder = new LTEncoder(payload, blockLen, sessionId);
   
-  // NEW: Added fileName to the FrameHeader payload!
   const header: FrameHeader = {
     sessionId,
     seq: 0,
@@ -101,24 +85,33 @@ async function startStream() {
     fileName: file.name, 
   };
 
-  let version: number | undefined; // locked after the first frame
+  let version: number | undefined; 
   let modules = 0;
   let scale = 1;
   const staging = document.createElement("canvas");
   const queue: ImageData[] = [];
   let nextSeq = 0;
 
+  // Grid dimensions based on lanes
+  const cols = lanes === 1 ? 1 : 2;
+  const rows = lanes > 2 ? 2 : (lanes === 2 ? 1 : 1);
+
   const sizeCanvas = () => {
     const dpr = window.devicePixelRatio || 1;
     const total = modules + 2 * MARGIN;
     const cssBudget = Math.min(0.9 * Math.min(window.innerWidth, window.innerHeight), displayPx);
-    scale = Math.max(1, Math.floor((cssBudget * dpr) / total));
+    
+    // Scale so the largest dimension (cols or rows) fits in the budget
+    const maxGridSize = Math.max(cols, rows) * total;
+    scale = Math.max(1, Math.floor((cssBudget * dpr) / maxGridSize));
+    
     staging.width = total;
     staging.height = total;
-    canvas.width = total * scale;
-    canvas.height = total * scale;
-    canvas.style.width = `${(total * scale) / dpr}px`;
-    canvas.style.height = `${(total * scale) / dpr}px`;
+    
+    canvas.width = cols * total * scale;
+    canvas.height = rows * total * scale;
+    canvas.style.width = `${(cols * total * scale) / dpr}px`;
+    canvas.style.height = `${(rows * total * scale) / dpr}px`;
   };
 
   const makeFrame = (): ImageData => {
@@ -129,14 +122,16 @@ async function startStream() {
       version,
       maskPattern: 4,
     });
+    
     if (version === undefined) {
       version = qr.version;
       modules = qr.modules.size;
       sizeCanvas();
       specs.textContent =
-        `${txFps} FPS · ${frameBytes} bytes per frame · V${version} · ECC ${ecc} · ` +
-        `${Math.round(payload.length / 1024)} KB payload · K=${encoder.k}`;
+        `${lanes} Lane(s) @ ${txFps} FPS · ${frameBytes} B/frame · V${version} · ECC ${ecc} · ` +
+        `${Math.round(payload.length / 1024)} KB · K=${encoder.k}`;
     }
+    
     const size = qr.modules.size;
     const data = qr.modules.data;
     const total = size + 2 * MARGIN;
@@ -154,11 +149,11 @@ async function startStream() {
   };
 
   const pump = () => {
-    if (gen !== generation) return; // superseded by a settings change
+    if (gen !== generation) return; 
     try {
-      while (queue.length < LOOKAHEAD) queue.push(makeFrame());
+      // Buffer enough frames for all lanes simultaneously
+      while (queue.length < LOOKAHEAD * lanes) queue.push(makeFrame());
     } catch (err) {
-      // e.g. frame bytes over capacity for the chosen ECC level
       specs.textContent = `✗ ${err instanceof Error ? err.message : String(err)}`;
       return;
     }
@@ -168,21 +163,51 @@ async function startStream() {
 
   const interval = 1000 / txFps;
   let nextAt = performance.now();
+  
   const tick = (now: number) => {
     if (gen !== generation) return;
     requestAnimationFrame(tick);
     if (now < nextAt) return;
-    const img = queue.shift();
-    if (!img) {
+    
+    // Make sure we have enough frames in the queue to fill our lanes
+    if (queue.length < lanes) {
       nextAt = now + interval;
       return;
     }
-    staging.getContext("2d")!.putImageData(img, 0, 0);
+
     const ctx = canvas.getContext("2d")!;
     ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(staging, 0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height); // clear canvas
+
+    const total = modules + 2 * MARGIN;
+    
+    // Position offsets for up to 4 quadrants
+    const positions = [
+      { x: 0, y: 0 },         // Top-Left
+      { x: 1, y: 0 },         // Top-Right
+      { x: 0, y: 1 },         // Bottom-Left
+      { x: 1, y: 1 },         // Bottom-Right
+    ];
+
+    // Pop and draw `lanes` amount of frames onto the canvas grid
+    for (let i = 0; i < lanes; i++) {
+      const img = queue.shift();
+      if (!img) break;
+      
+      staging.getContext("2d")!.putImageData(img, 0, 0);
+      
+      const pos = positions[i];
+      const dx = pos.x * total * scale;
+      const dy = pos.y * total * scale;
+      const dw = total * scale;
+      const dh = total * scale;
+      
+      ctx.drawImage(staging, 0, 0, total, total, dx, dy, dw, dh);
+    }
+    
     nextAt += interval;
-    if (now - nextAt > 3 * interval) nextAt = now + interval; // fell behind — don't burst
+    if (now - nextAt > 3 * interval) nextAt = now + interval; 
   };
   requestAnimationFrame(tick);
 }
