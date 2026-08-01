@@ -198,6 +198,8 @@ async function startStream() {
       staging.getContext("2d")!.putImageData(img, 0, 0);
       
       const pos = positions[i];
+      if (!pos) break; // <-- TypeScript fix applied here
+      
       const dx = pos.x * total * scale;
       const dy = pos.y * total * scale;
       const dw = total * scale;
