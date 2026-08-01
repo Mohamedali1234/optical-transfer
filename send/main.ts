@@ -21,6 +21,27 @@ const cfgSize = document.getElementById("cfg-size") as HTMLInputElement;
 const payloadCache = new Map<string, Uint8Array>();
 let generation = 0; // bumped on every restart; stale loops see it and die
 
+// --- WAKE LOCK MANAGER ---
+let wakeLockSentinel: any = null;
+
+async function requestWakeLock() {
+  try {
+    if ('wakeLock' in navigator) {
+      wakeLockSentinel = await (navigator as any).wakeLock.request('screen');
+    }
+  } catch (err) {
+    /* fine without it */
+  }
+}
+
+// Automatically re-request if you switch tabs and come back
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    requestWakeLock();
+  }
+});
+// -------------------------
+
 async function loadPayload(source: string | File): Promise<Uint8Array | null> {
   if (source instanceof File) {
     return new Uint8Array(await source.arrayBuffer());
@@ -42,18 +63,14 @@ async function main() {
   }
   
   specs.textContent = `Awaiting file upload...`;
-  
-  try {
-    await (navigator as Navigator & { wakeLock?: { request(t: "screen"): Promise<unknown> } })
-      .wakeLock?.request("screen");
-  } catch {
-    /* fine without it */
-  }
 }
 
 async function startStream() {
   const file = cfgFile.files?.[0];
   if (!file) return;
+
+  // Grab the wake lock now that the user has interacted by picking a file!
+  requestWakeLock();
 
   const gen = ++generation;
   
