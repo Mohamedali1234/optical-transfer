@@ -22,12 +22,10 @@ const payloadCache = new Map<string, Uint8Array>();
 let generation = 0; // bumped on every restart; stale loops see it and die
 
 // --- WAKE LOCK MANAGER ---
-let wakeLockSentinel: any = null;
-
 async function requestWakeLock() {
   try {
     if ('wakeLock' in navigator) {
-      wakeLockSentinel = await (navigator as any).wakeLock.request('screen');
+      await (navigator as any).wakeLock.request('screen');
     }
   } catch (err) {
     /* fine without it */
