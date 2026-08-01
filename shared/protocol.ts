@@ -39,7 +39,7 @@ export function packFrame(h: FrameHeader, block: Uint8Array): Uint8Array {
   dv.setUint32(12, h.totalLen, true);
   dv.setUint32(16, h.payloadFnv, true);
   
-  // Encode filename into the 64-byte block (with nullish coalescing for strict TS check)
+  // Encode filename into the 64-byte block
   const nameBytes = new TextEncoder().encode(h.fileName);
   for (let i = 0; i < 64; i++) {
     dv.setUint8(20 + i, i < nameBytes.length ? (nameBytes[i] ?? 0) : 0);
