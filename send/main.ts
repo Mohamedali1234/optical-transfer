@@ -99,19 +99,29 @@ async function startStream() {
   const sizeCanvas = () => {
     const dpr = window.devicePixelRatio || 1;
     const total = modules + 2 * MARGIN;
-    const cssBudget = Math.min(0.9 * Math.min(window.innerWidth, window.innerHeight), displayPx);
     
-    // Scale so the largest dimension (cols or rows) fits in the budget
-    const maxGridSize = Math.max(cols, rows) * total;
-    scale = Math.max(1, Math.floor((cssBudget * dpr) / maxGridSize));
+    // Maximize space: allow stretching up to 95% of the physical window dimensions
+    const maxW = window.innerWidth * 0.95;
+    const maxH = window.innerHeight * 0.95;
+
+    // Treat the display size slider as the max size PER QR CODE, not the whole grid
+    const budgetW = Math.min(maxW, displayPx * cols);
+    const budgetH = Math.min(maxH, displayPx * rows);
+
+    // Calculate maximum scale possible for width and height independently
+    const scaleX = (budgetW * dpr) / (cols * total);
+    const scaleY = (budgetH * dpr) / (rows * total);
+    
+    // Pick the smaller scale so nothing gets clipped, but max out the allowed axis
+    scale = Math.max(1, Math.floor(Math.min(scaleX, scaleY)));
     
     staging.width = total;
     staging.height = total;
     
     canvas.width = cols * total * scale;
     canvas.height = rows * total * scale;
-    canvas.style.width = `${(cols * total * scale) / dpr}px`;
-    canvas.style.height = `${(rows * total * scale) / dpr}px`;
+    canvas.style.width = `${canvas.width / dpr}px`;
+    canvas.style.height = `${canvas.height / dpr}px`;
   };
 
   const makeFrame = (): ImageData => {
@@ -127,6 +137,10 @@ async function startStream() {
       version = qr.version;
       modules = qr.modules.size;
       sizeCanvas();
+      
+      // Hook into window resize to dynamically update the size when rotating a phone or dragging a window
+      window.addEventListener('resize', sizeCanvas);
+
       specs.textContent =
         `${lanes} Lane(s) @ ${txFps} FPS · ${frameBytes} B/frame · V${version} · ECC ${ecc} · ` +
         `${Math.round(payload.length / 1024)} KB · K=${encoder.k}`;
@@ -149,7 +163,10 @@ async function startStream() {
   };
 
   const pump = () => {
-    if (gen !== generation) return; 
+    if (gen !== generation) {
+      window.removeEventListener('resize', sizeCanvas); // Cleanup listener on restart
+      return;
+    }
     try {
       // Buffer enough frames for all lanes simultaneously
       while (queue.length < LOOKAHEAD * lanes) queue.push(makeFrame());
@@ -198,7 +215,7 @@ async function startStream() {
       staging.getContext("2d")!.putImageData(img, 0, 0);
       
       const pos = positions[i];
-      if (!pos) break; // <-- TypeScript fix applied here
+      if (!pos) break; // TypeScript fix applied here
       
       const dx = pos.x * total * scale;
       const dy = pos.y * total * scale;
