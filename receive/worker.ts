@@ -22,15 +22,25 @@ ctx.onmessage = async (e: MessageEvent) => {
   const { id, buf, w, h } = e.data as { id: number; buf: ArrayBuffer; w: number; h: number };
   try {
     const img = new ImageData(new Uint8ClampedArray(buf), w, h);
-    const results = await readBarcodes(img, { formats: ["QRCode"], maxNumberOfSymbols: 1 });
-    const r = results.find((x) => x.isValid && x.bytes.length > 0);
-    ctx.postMessage({ id, bytes: r ? r.bytes : null });
+    
+    // Changed to 4 to support Multi-Lane Grid scanning!
+    const results = await readBarcodes(img, { 
+      formats: ["QRCode"], 
+      maxNumberOfSymbols: 4 
+    });
+    
+    // Extract all valid QR codes found in this single frame
+    const bytesList = results
+      .filter((x) => x.isValid && x.bytes && x.bytes.length > 0)
+      .map((x) => x.bytes);
+
+    ctx.postMessage({ id, bytesList: bytesList.length > 0 ? bytesList : null });
   } catch {
-    ctx.postMessage({ id, bytes: null });
+    ctx.postMessage({ id, bytesList: null });
   }
 };
 
 // warm the WASM so the first real frame doesn't pay instantiation
 void readBarcodes(new ImageData(8, 8), { formats: ["QRCode"] })
   .catch(() => undefined)
-  .then(() => ctx.postMessage({ id: -1, bytes: null }));
+  .then(() => ctx.postMessage({ id: -1, bytesList: null }));
