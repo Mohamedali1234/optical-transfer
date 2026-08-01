@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="../shared/style.css" />
   </head>
   <body>
-    <!-- Back Button to Main Menu -->
     <p><a href="../index.html" style="text-decoration: none; font-weight: bold;">← Go Back</a></p>
 
     <h1>DECIMEN <small>— Fountain QR File Transfer</small></h1>
@@ -15,12 +14,20 @@
     <details class="settings" open>
       <summary>Settings</summary>
       <div class="row">
-        <!-- CUSTOM FILE PICKER REPLACED THE DROPDOWN -->
         <label style="width: 100%;">
           select file to send
           <input type="file" id="cfg-file" style="margin-top: 5px; width: 100%;" />
         </label>
         
+        <label>
+          qr lanes
+          <select id="cfg-lanes">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option selected>4</option>
+          </select>
+        </label>
         <label>
           tx fps
           <select id="cfg-fps">
@@ -58,8 +65,7 @@
         </label>
       </div>
       <div class="hint" style="text-align: left; padding-top: 8px">
-        Changes restart the stream — the receiver resets automatically (new
-        session id in the frame headers; that's the fountain protocol's gift).
+        Changes restart the stream — choose 1 for stability or up to 4 for max speed.
       </div>
     </details>
     <div class="stage"><canvas id="qr" width="16" height="16"></canvas></div>
