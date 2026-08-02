@@ -63,9 +63,19 @@
           display size
           <input id="cfg-size" type="range" min="300" max="1200" step="50" value="900" />
         </label>
+        <label>
+          color mode (~3x)
+          <select id="cfg-color">
+            <option selected value="off">off</option>
+            <option value="on">on</option>
+          </select>
+        </label>
       </div>
       <div class="hint" style="text-align: left; padding-top: 8px">
         Changes restart the stream — choose 1 for stability or up to 4 for max speed.
+        Color mode packs 3 frames per code (R/G/B planes) for ~3x throughput, but needs
+        the receiver's color mode ON too, and is more sensitive to camera quality/lighting —
+        try a larger display size and higher error correction if it struggles to lock on.
       </div>
     </details>
     <div class="stage"><canvas id="qr" width="16" height="16"></canvas></div>
