@@ -17,6 +17,7 @@ const cfgFps = document.getElementById("cfg-fps") as HTMLSelectElement;
 const cfgBytes = document.getElementById("cfg-bytes") as HTMLSelectElement;
 const cfgEcc = document.getElementById("cfg-ecc") as HTMLSelectElement;
 const cfgSize = document.getElementById("cfg-size") as HTMLInputElement;
+const cfgColor = document.getElementById("cfg-color") as HTMLSelectElement;
 
 const payloadCache = new Map<string, Uint8Array>();
 let generation = 0; // bumped on every restart; stale loops see it and die
@@ -56,7 +57,7 @@ async function loadPayload(source: string | File): Promise<Uint8Array | null> {
 
 async function main() {
   // Re-bound all settings to trigger stream restarts
-  for (const el of [cfgFile, cfgLanes, cfgFps, cfgBytes, cfgEcc, cfgSize]) {
+  for (const el of [cfgFile, cfgLanes, cfgFps, cfgBytes, cfgEcc, cfgSize, cfgColor]) {
     el.addEventListener("change", () => void startStream());
   }
   
@@ -85,6 +86,7 @@ async function startStream() {
   const frameBytes = Number(cfgBytes.value);
   const ecc = cfgEcc.value as "L" | "M" | "Q" | "H";
   const displayPx = Number(cfgSize.value);
+  const colorMode = cfgColor.value === "on";
 
   const sessionId = (Math.floor(Math.random() * 0xffff) + 1) & 0xffff;
   const blockLen = frameBytes - HEADER_LEN;
@@ -160,28 +162,31 @@ async function startStream() {
     canvas.style.height = `${canvas.height / dpr}px`;
   };
 
-  const makeFrame = (): ImageData => {
-    const bytes = packFrame({ ...header, seq: nextSeq }, encoder.encode(nextSeq));
-    nextSeq++;
-    const qr = QRCode.create([{ data: bytes, mode: "byte" } as unknown as QRCode.QRCodeSegment], {
+  const makeQr = (bytes: Uint8Array) =>
+    QRCode.create([{ data: bytes, mode: "byte" } as unknown as QRCode.QRCodeSegment], {
       errorCorrectionLevel: ecc,
       version,
       maskPattern: 4,
     });
-    
-    if (version === undefined) {
-      version = qr.version;
-      modules = qr.modules.size;
-      sizeCanvas();
-      
-      // Auto-resize when you rotate your phone!
-      window.addEventListener('resize', sizeCanvas);
 
-      specs.textContent =
-        `${lanes} Lane(s) @ ${txFps} FPS · ${frameBytes} B/frame · V${version} · ECC ${ecc} · ` +
-        `${Math.round(payload.length / 1024)} KB · K=${encoder.k}`;
-    }
-    
+  const onFirstFrame = (v: number, m: number, throughputNote: string) => {
+    version = v;
+    modules = m;
+    sizeCanvas();
+    // Auto-resize when you rotate your phone!
+    window.addEventListener('resize', sizeCanvas);
+    specs.textContent =
+      `${lanes} Lane(s) @ ${txFps} FPS · ${frameBytes} B/frame · V${version} · ECC ${ecc} · ` +
+      `${Math.round(payload.length / 1024)} KB · K=${encoder.k}${throughputNote}`;
+  };
+
+  const makeFrameMono = (): ImageData => {
+    const bytes = packFrame({ ...header, seq: nextSeq }, encoder.encode(nextSeq));
+    nextSeq++;
+    const qr = makeQr(bytes);
+
+    if (version === undefined) onFirstFrame(qr.version, qr.modules.size, "");
+
     const size = qr.modules.size;
     const data = qr.modules.data;
     const total = size + 2 * MARGIN;
@@ -197,6 +202,48 @@ async function startStream() {
     }
     return img;
   };
+
+  // Packs 3 independent fountain frames (seq, seq+1, seq+2) into the R/G/B
+  // bitplanes of one code — same screen footprint, ~3x the data. The
+  // receiver must split channels back out before handing each to zxing,
+  // since a raw color image just decodes as grayscale mush.
+  const makeFrameColor = (): ImageData => {
+    const bytes0 = packFrame({ ...header, seq: nextSeq }, encoder.encode(nextSeq));
+    const bytes1 = packFrame({ ...header, seq: nextSeq + 1 }, encoder.encode(nextSeq + 1));
+    const bytes2 = packFrame({ ...header, seq: nextSeq + 2 }, encoder.encode(nextSeq + 2));
+    nextSeq += 3;
+
+    const qr0 = makeQr(bytes0);
+    const qr1 = makeQr(bytes1);
+    const qr2 = makeQr(bytes2);
+
+    if (version === undefined) {
+      onFirstFrame(qr0.version, qr0.modules.size, " · ×3 color planes (receiver must match)");
+    }
+
+    const size = qr0.modules.size;
+    const d0 = qr0.modules.data;
+    const d1 = qr1.modules.data;
+    const d2 = qr2.modules.data;
+    const total = size + 2 * MARGIN;
+    const img = new ImageData(total, total);
+    const px = img.data;
+    px.fill(255); // white background on every channel, alpha included
+    for (let y = 0; y < size; y++) {
+      const row = (y + MARGIN) * total + MARGIN;
+      const src = y * size;
+      for (let x = 0; x < size; x++) {
+        const o = (row + x) * 4;
+        px[o] = d0[src + x] ? 0 : 255;
+        px[o + 1] = d1[src + x] ? 0 : 255;
+        px[o + 2] = d2[src + x] ? 0 : 255;
+        px[o + 3] = 255;
+      }
+    }
+    return img;
+  };
+
+  const makeFrame = colorMode ? makeFrameColor : makeFrameMono;
 
   const pump = () => {
     if (gen !== generation) {
