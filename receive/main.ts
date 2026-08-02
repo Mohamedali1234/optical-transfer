@@ -26,6 +26,7 @@ let startTs = 0;
 let captureGen = 0;
 let done = false;
 let currentFileName = "download.bin";
+let colorModeOn = false;
 
 const workers: Worker[] = [];
 const busy: boolean[] = [];
@@ -115,6 +116,7 @@ async function start() {
   const captureWidth = Number((document.getElementById("cfg-width") as HTMLSelectElement).value);
   const captureFps = Number((document.getElementById("cfg-capfps") as HTMLSelectElement).value);
   const workerCount = Number((document.getElementById("cfg-workers") as HTMLSelectElement).value);
+  colorModeOn = (document.getElementById("cfg-color-rx") as HTMLSelectElement).value === "on";
   
   settings.style.display = "none";
   startBtn.style.display = "none";
@@ -209,9 +211,10 @@ function captureFrame() {
   ctx.drawImage(video, 0, 0);
   const img = ctx.getImageData(0, 0, vw, vh);
   busy[slot] = true;
-  workers[slot]!.postMessage({ id: frameId++, buf: img.data.buffer, w: vw, h: vh }, [
-    img.data.buffer,
-  ]);
+  workers[slot]!.postMessage(
+    { id: frameId++, buf: img.data.buffer, w: vw, h: vh, colorMode: colorModeOn },
+    [img.data.buffer],
+  );
 }
 
 function onDecoded(bytes: Uint8Array) {
