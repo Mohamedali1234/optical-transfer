@@ -41,6 +41,18 @@
             <option>3</option>
           </select>
         </label>
+        <label>
+          color mode (~3x)
+          <select id="cfg-color-rx">
+            <option selected value="off">off</option>
+            <option value="on">on</option>
+          </select>
+        </label>
+      </div>
+      <div class="hint" style="text-align: left; padding-top: 8px">
+        Must match the sender's color mode setting. Decodes 3 channels per frame,
+        so it costs roughly 3x the CPU per capture — drop a worker or the capture
+        width if it stutters.
       </div>
     </details>
     
