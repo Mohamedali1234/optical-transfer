@@ -4,8 +4,8 @@
 import QRCode from "qrcode";
 import { LTEncoder } from "../shared/fountain";
 import { HEADER_LEN, fnv1a, packFrame, type FrameHeader } from "../shared/protocol";
+import { MARGIN, SWATCH_MODULES, SWATCH_COUNT, SWATCH_PATCHES } from "../shared/layout";
 
-const MARGIN = 4; // quiet-zone modules
 const LOOKAHEAD = 3;
 
 const canvas = document.getElementById("qr") as HTMLCanvasElement;
@@ -115,9 +115,18 @@ async function startStream() {
   const queue: ImageData[] = [];
   let nextSeq = 0;
 
+  // Color mode tiles are taller than wide (QR + margin, plus a calibration
+  // swatch band underneath); mono tiles stay square as before.
+  const tileDims = () => {
+    const qrTotal = modules + 2 * MARGIN;
+    const tileW = qrTotal;
+    const tileH = colorMode ? qrTotal + SWATCH_MODULES : qrTotal;
+    return { qrTotal, tileW, tileH };
+  };
+
   const sizeCanvas = () => {
     const dpr = window.devicePixelRatio || 1;
-    const total = modules + 2 * MARGIN;
+    const { tileW, tileH } = tileDims();
     
     const isPortrait = window.innerHeight > window.innerWidth;
 
@@ -148,16 +157,16 @@ async function startStream() {
     const budgetW = Math.min(maxW, displayPx * cols);
     const budgetH = Math.min(maxH, displayPx * rows);
 
-    const scaleX = (budgetW * dpr) / (cols * total);
-    const scaleY = (budgetH * dpr) / (rows * total);
+    const scaleX = (budgetW * dpr) / (cols * tileW);
+    const scaleY = (budgetH * dpr) / (rows * tileH);
     
     scale = Math.max(1, Math.floor(Math.min(scaleX, scaleY)));
     
-    staging.width = total;
-    staging.height = total;
+    staging.width = tileW;
+    staging.height = tileH;
     
-    canvas.width = cols * total * scale;
-    canvas.height = rows * total * scale;
+    canvas.width = cols * tileW * scale;
+    canvas.height = rows * tileH * scale;
     canvas.style.width = `${canvas.width / dpr}px`;
     canvas.style.height = `${canvas.height / dpr}px`;
   };
@@ -206,7 +215,9 @@ async function startStream() {
   // Packs 3 independent fountain frames (seq, seq+1, seq+2) into the R/G/B
   // bitplanes of one code — same screen footprint, ~3x the data. The
   // receiver must split channels back out before handing each to zxing,
-  // since a raw color image just decodes as grayscale mush.
+  // since a raw color image just decodes as grayscale mush. A calibration
+  // band (black/white/R/G/B patches) below the code lets the receiver
+  // correct for white-balance drift using the QR's own decoded geometry.
   const makeFrameColor = (): ImageData => {
     const bytes0 = packFrame({ ...header, seq: nextSeq }, encoder.encode(nextSeq));
     const bytes1 = packFrame({ ...header, seq: nextSeq + 1 }, encoder.encode(nextSeq + 1));
@@ -218,25 +229,41 @@ async function startStream() {
     const qr2 = makeQr(bytes2);
 
     if (version === undefined) {
-      onFirstFrame(qr0.version, qr0.modules.size, " · ×3 color planes (receiver must match)");
+      onFirstFrame(qr0.version, qr0.modules.size, " · ×3 color planes + calibration band (receiver must match)");
     }
 
     const size = qr0.modules.size;
     const d0 = qr0.modules.data;
     const d1 = qr1.modules.data;
     const d2 = qr2.modules.data;
-    const total = size + 2 * MARGIN;
-    const img = new ImageData(total, total);
+    const qrTotal = size + 2 * MARGIN;
+    const tileH = qrTotal + SWATCH_MODULES;
+    const img = new ImageData(qrTotal, tileH);
     const px = img.data;
     px.fill(255); // white background on every channel, alpha included
     for (let y = 0; y < size; y++) {
-      const row = (y + MARGIN) * total + MARGIN;
+      const row = (y + MARGIN) * qrTotal + MARGIN;
       const src = y * size;
       for (let x = 0; x < size; x++) {
         const o = (row + x) * 4;
         px[o] = d0[src + x] ? 0 : 255;
         px[o + 1] = d1[src + x] ? 0 : 255;
         px[o + 2] = d2[src + x] ? 0 : 255;
+        px[o + 3] = 255;
+      }
+    }
+
+    // Calibration band: SWATCH_COUNT solid patches spanning the tile width,
+    // directly beneath the QR + quiet zone.
+    const patchW = Math.ceil(qrTotal / SWATCH_COUNT);
+    for (let y = qrTotal; y < tileH; y++) {
+      const row = y * qrTotal;
+      for (let x = 0; x < qrTotal; x++) {
+        const patch = SWATCH_PATCHES[Math.min(SWATCH_COUNT - 1, Math.floor(x / patchW))]!;
+        const o = (row + x) * 4;
+        px[o] = patch[0];
+        px[o + 1] = patch[1];
+        px[o + 2] = patch[2];
         px[o + 3] = 255;
       }
     }
@@ -278,7 +305,7 @@ async function startStream() {
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const total = modules + 2 * MARGIN;
+    const { tileW, tileH } = tileDims();
     
     // Pop and draw `lanes` amount of frames onto the dynamic grid
     for (let i = 0; i < lanes; i++) {
@@ -290,12 +317,12 @@ async function startStream() {
       const pos = positions[i];
       if (!pos) break;
       
-      const dx = pos.x * total * scale;
-      const dy = pos.y * total * scale;
-      const dw = total * scale;
-      const dh = total * scale;
+      const dx = pos.x * tileW * scale;
+      const dy = pos.y * tileH * scale;
+      const dw = tileW * scale;
+      const dh = tileH * scale;
       
-      ctx.drawImage(staging, 0, 0, total, total, dx, dy, dw, dh);
+      ctx.drawImage(staging, 0, 0, tileW, tileH, dx, dy, dw, dh);
     }
     
     nextAt += interval;
