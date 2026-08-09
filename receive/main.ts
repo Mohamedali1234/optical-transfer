@@ -1,11 +1,10 @@
 // Receiver: camera → WASM QR decode in workers → fountain decoder → file.
 // Includes hardware benchmarking to auto-tune optimal workers and capture resolution.
 
-import { LTDecoder } from "../shared/fountain";
+import { LTDecoder, OVERHEAD_EST } from "../shared/fountain";
 import { fnv1a, parseFrame } from "../shared/protocol";
+import { formatDuration } from "../shared/format";
 import { Filesystem, Directory } from "@capacitor/filesystem";
-
-const OVERHEAD_EST = 1.18; // expected frames ≈ K × this (robust-soliton ε)
 
 const startBtn = document.getElementById("start") as HTMLButtonElement;
 const benchBtn = document.getElementById("benchmark") as HTMLButtonElement;
@@ -14,6 +13,7 @@ const preview = document.getElementById("preview")!;
 const stats = document.getElementById("stats")!;
 const progressEl = document.getElementById("progress")!;
 const bar = document.getElementById("bar")!;
+const progressLabel = document.getElementById("progress-label")!;
 const result = document.getElementById("result")!;
 const settings = document.getElementById("settings") as HTMLDetailsElement;
 const metricsEl = document.getElementById("metrics")!;
@@ -236,6 +236,7 @@ function onDecoded(bytes: Uint8Array) {
   decoder.addFrame(header.seq, block);
   const progress = Math.min(0.99, decoder.framesNew / (decoder.k * OVERHEAD_EST));
   bar.style.width = `${(progress * 100).toFixed(1)}%`;
+  progressLabel.textContent = `${Math.round(progress * 100)}%`;
 
   if (decoder.isComplete) {
     const payload = decoder.assemble()!;
@@ -263,6 +264,7 @@ async function finish(payload: Uint8Array, hashOk: boolean, seconds: number, tot
   stream?.getTracks().forEach((t) => t.stop());
   preview.style.display = "none";
   bar.style.width = "100%";
+  progressLabel.textContent = "100%";
   const kb = Math.round(totalLen / 1024);
   const rate = (totalLen / 1024 / seconds).toFixed(1);
   stats.textContent = `${kb} KB in ${seconds.toFixed(1)} s · ${rate} KB/s · hash ${hashOk ? "verified ✓" : "MISMATCH ✗"}`;
@@ -327,9 +329,17 @@ function updateStats() {
   metric("m-dec").textContent = (decodeTimes.length / 2).toFixed(1);
   if (!decoder) return;
   const elapsed = (now - startTs) / 1000;
-  const kbs = (decoder.framesNew * decoder.blockLen) / OVERHEAD_EST / 1024 / Math.max(0.1, elapsed);
+  const receivedBytes = decoder.framesNew * decoder.blockLen;
+  const kbs = receivedBytes / OVERHEAD_EST / 1024 / Math.max(0.1, elapsed);
   metric("m-rate").textContent = `${kbs.toFixed(1)} KB/s`;
   metric("m-time").textContent = `${elapsed.toFixed(0)} s`;
+
+  const expectedBytes = decoder.k * decoder.blockLen * OVERHEAD_EST;
+  const remainingBytes = Math.max(0, expectedBytes - receivedBytes);
+  const rateBytesPerSec = kbs * 1024;
+  metric("m-eta").textContent =
+    rateBytesPerSec > 0 ? formatDuration(remainingBytes / rateBytesPerSec) : "—";
+
   metric("m-frames").textContent = `${decoder.framesNew}/${decoder.framesDup}`;
   metric("m-k").textContent = String(decoder.k);
   metric("m-block").textContent = `${decoder.blockLen} B`;
