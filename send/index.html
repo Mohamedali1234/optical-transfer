@@ -3,98 +3,119 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Optical Transfer — send</title>
-    <link rel="stylesheet" href="../shared/style.css" />
+    <title>Decimen — send</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <p><a href="../index.html" style="text-decoration: none; font-weight: bold;">← Go Back</a></p>
-
-    <h1>DECIMEN <small>— Fountain QR File Transfer</small></h1>
-    <div class="hint" id="specs">Awaiting file...</div>
-    <details class="settings" open>
-      <summary>Settings</summary>
-      <div class="row">
-        <label style="width: 100%;">
-          select file to send
-          <input type="file" id="cfg-file" style="margin-top: 5px; width: 100%;" />
-        </label>
-        <label id="cfg-imgsize-row">
-          shrink images
-          <select id="cfg-imgsize">
-            <option selected value="original">original</option>
-            <option value="large">large (1920px)</option>
-            <option value="medium">medium (1280px)</option>
-            <option value="small">small (800px)</option>
-          </select>
-        </label>
-        
-        <label>
-          qr lanes
-          <select id="cfg-lanes">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option selected>4</option>
-          </select>
-        </label>
-        <label>
-          tx fps
-          <select id="cfg-fps">
-            <option>10</option>
-            <option>15</option>
-            <option>20</option>
-            <option selected>24</option>
-            <option>30</option>
-            <option>60</option>
-          </select>
-        </label>
-        <label>
-          bytes / frame
-          <select id="cfg-bytes">
-            <option>500</option>
-            <option>1000</option>
-            <option selected>1465</option>
-            <option>1850</option>
-            <option>2331</option>
-            <option>2953</option>
-          </select>
-        </label>
-        <label>
-          error correction
-          <select id="cfg-ecc">
-            <option selected>L</option>
-            <option>M</option>
-            <option>Q</option>
-            <option>H</option>
-          </select>
-        </label>
-        <label>
-          display size
-          <input id="cfg-size" type="range" min="300" max="1200" step="50" value="900" />
-        </label>
-        <label>
-          color mode (~3x)
-          <select id="cfg-color">
-            <option selected value="off">off</option>
-            <option value="on">on</option>
-          </select>
-        </label>
-      </div>
-      <div class="hint" style="text-align: left; padding-top: 8px">
-        Shrinking only applies to image files (re-encoded as JPEG, so transparency is
-        lost) — everything else transfers untouched. Smaller images mean fewer QR
-        frames and a faster transfer.
-        Changes restart the stream — choose 1 for stability or up to 4 for max speed.
-        Color mode packs 3 frames per code (R/G/B planes) for ~3x throughput, but needs
-        the receiver's color mode ON too, and is more sensitive to camera quality/lighting —
-        try a larger display size and higher error correction if it struggles to lock on.
-      </div>
-    </details>
-    <div class="stage"><canvas id="qr" width="16" height="16"></canvas></div>
-    <div class="hint">
-      Max screen brightness helps. The stream loops forever — stop when the
-      receiver says done.
+    <div class="topbar">
+      <a class="back" href="../index.html" aria-label="Go back">←</a>
+      <div class="wordmark">Decimen<span class="dot">·</span><span class="sub">transmit</span></div>
+      <div class="status-pill" id="tx-status">idle</div>
     </div>
+
+    <main class="deck">
+      <section class="stage-wrap" id="stage-wrap">
+        <span class="corner tl"></span>
+        <span class="corner tr"></span>
+        <span class="corner bl"></span>
+        <span class="corner br"></span>
+        <span class="sweep"></span>
+        <div class="stage"><canvas id="qr" width="16" height="16"></canvas></div>
+      </section>
+
+      <p class="telemetry" id="specs">awaiting file…</p>
+
+      <details class="console" open>
+        <summary>Controls</summary>
+
+        <div class="field-grid">
+          <div class="field wide">
+            <label for="cfg-file">source file</label>
+            <input type="file" id="cfg-file" />
+          </div>
+
+          <div class="field" id="cfg-imgsize-row">
+            <label for="cfg-imgsize">shrink images</label>
+            <select id="cfg-imgsize">
+              <option selected value="original">original</option>
+              <option value="large">large · 1920px</option>
+              <option value="medium">medium · 1280px</option>
+              <option value="small">small · 800px</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="cfg-lanes">qr lanes</label>
+            <select id="cfg-lanes">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option selected>4</option>
+            </select>
+          </div>
+
+          <div class="field wide">
+            <label for="cfg-fps">tx fps <span class="readout" id="fps-readout">24 fps</span></label>
+            <input id="cfg-fps" type="range" min="1" max="60" step="1" value="24" />
+          </div>
+
+          <div class="field">
+            <label for="cfg-bytes">density (bytes/frame)</label>
+            <select id="cfg-bytes">
+              <option>500</option>
+              <option>1000</option>
+              <option selected>1465</option>
+              <option>1850</option>
+              <option>2331</option>
+              <option>2953</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="cfg-ecc">error correction</label>
+            <select id="cfg-ecc">
+              <option selected>L</option>
+              <option>M</option>
+              <option>Q</option>
+              <option>H</option>
+            </select>
+          </div>
+
+          <div class="field wide">
+            <label for="cfg-size">display size <span class="readout" id="size-readout">900px</span></label>
+            <input id="cfg-size" type="range" min="300" max="1200" step="50" value="900" />
+          </div>
+
+          <div class="field">
+            <label for="cfg-color">color mode (~3×)</label>
+            <select id="cfg-color">
+              <option selected value="off">off</option>
+              <option value="on">on</option>
+            </select>
+          </div>
+
+          <p class="note">
+            Shrinking only applies to image files (re-encoded as JPEG, so transparency is lost) —
+            everything else transfers untouched. Smaller images mean fewer QR frames and a faster
+            transfer. Changes restart the stream — choose 1 lane for stability or up to 4 for max
+            speed. Color mode packs 3 frames per code (R/G/B planes) for ~3× throughput, but needs
+            the receiver's color mode on too, and is more sensitive to camera quality/lighting —
+            try a larger display size and higher error correction if it struggles to lock on.
+          </p>
+        </div>
+      </details>
+
+      <p class="hint">
+        Max screen brightness helps. The stream loops forever — stop when the receiver says done.
+      </p>
+    </main>
+
     <script type="module" src="./main.ts"></script>
   </body>
 </html>
