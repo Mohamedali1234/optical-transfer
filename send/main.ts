@@ -2,9 +2,10 @@
 // Supports 1, 2, 3, or 4 simultaneous QR code lanes with a responsive phone-friendly grid.
 
 import QRCode from "qrcode";
-import { LTEncoder } from "../shared/fountain";
+import { LTEncoder, OVERHEAD_EST } from "../shared/fountain";
 import { HEADER_LEN, fnv1a, packFrame, type FrameHeader } from "../shared/protocol";
 import { MARGIN, SWATCH_MODULES, SWATCH_COUNT, SWATCH_PATCHES } from "../shared/layout";
+import { formatDuration } from "../shared/format";
 
 const LOOKAHEAD = 3;
 
@@ -246,9 +247,17 @@ async function startStream() {
     sizeCanvas();
     // Auto-resize when you rotate your phone!
     window.addEventListener('resize', sizeCanvas);
+
+    // Rough estimate assuming every emitted frame decodes cleanly — a real
+    // transfer will be slower once dropped/misread frames are accounted for,
+    // so treat this as a best case, not a promise.
+    const bytesPerSec = lanes * frameBytes * txFps * (colorMode ? 3 : 1);
+    const etaSeconds = (payload.length * OVERHEAD_EST) / bytesPerSec;
+
     specs.textContent =
       `${lanes} Lane(s) @ ${txFps} FPS · ${frameBytes} B/frame · V${version} · ECC ${ecc} · ` +
-      `${Math.round(payload.length / 1024)} KB · K=${encoder.k}${shrinkNote}${throughputNote}`;
+      `${Math.round(payload.length / 1024)} KB · K=${encoder.k}${shrinkNote}${throughputNote} · ` +
+      `~${formatDuration(etaSeconds)} best case`;
   };
 
   const makeFrameMono = (): ImageData => {
