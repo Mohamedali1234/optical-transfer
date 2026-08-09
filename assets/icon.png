@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- Neon Glow Filters -->
+    <filter id="glow-amber" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="glow-teal" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="14" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    
+    <!-- Standard QR Code Finder Pattern -->
+    <g id="qr-finder">
+      <rect x="0" y="0" width="160" height="160" rx="20" fill="none" stroke="#FFB84D" stroke-width="24"/>
+      <rect x="44" y="44" width="72" height="72" rx="12" fill="#FFB84D"/>
+    </g>
+
+    <!-- Scanner Beam Gradient -->
+    <linearGradient id="beam-grad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#4DD9C0" stop-opacity="0" />
+      <stop offset="100%" stop-color="#4DD9C0" stop-opacity="1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Base Background -->
+  <rect width="1024" height="1024" fill="#0A0B0F"/>
+
+  <!-- Blueprint / Tech Grid -->
+  <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+    <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#1B1E27" stroke-width="2"/>
+  </pattern>
+  <rect width="1024" height="1024" fill="url(#grid)"/>
+
+  <!-- The 3 Classic QR Anchor Corners (Amber Glow) -->
+  <g filter="url(#glow-amber)">
+    <!-- Top Left -->
+    <use href="#qr-finder" x="80" y="80"/>
+    <!-- Top Right -->
+    <use href="#qr-finder" x="784" y="80"/>
+    <!-- Bottom Left -->
+    <use href="#qr-finder" x="80" y="784"/>
+  </g>
+
+  <!-- Optical Scanner Beam / Light Cone -->
+  <polygon points="512,500 120,100 904,100" fill="url(#beam-grad)" opacity="0.12"/>
+  
+  <!-- Horizontal Laser Scan Lines -->
+  <line x1="220" y1="250" x2="804" y2="250" stroke="#4DD9C0" stroke-width="4" stroke-dasharray="24 12" opacity="0.6" filter="url(#glow-teal)"/>
+  <line x1="320" y1="380" x2="704" y2="380" stroke="#4DD9C0" stroke-width="2" stroke-dasharray="12 16" opacity="0.3" filter="url(#glow-teal)"/>
+
+  <!-- Data Particles Floating Up the Light Beam -->
+  <g fill="#4DD9C0" filter="url(#glow-teal)">
+    <rect x="500" y="380" width="20" height="20" rx="4"/>
+    <rect x="380" y="270" width="16" height="16" rx="4"/>
+    <rect x="660" y="220" width="24" height="24" rx="6"/>
+    <rect x="450" y="160" width="16" height="16" rx="4"/>
+    <rect x="580" y="100" width="20" height="20" rx="4"/>
+  </g>
+  <g fill="#FFB84D" filter="url(#glow-amber)">
+    <rect x="550" y="310" width="16" height="16" rx="4"/>
+    <rect x="320" y="190" width="24" height="24" rx="6"/>
+  </g>
+
+  <!-- The Cybernetic Optical Eye (Base) -->
+  <!-- Outer Eye Shell -->
+  <path d="M 140 600 Q 512 360 884 600 Q 512 840 140 600 Z" fill="#12141B" stroke="#232733" stroke-width="16"/>
+  <!-- Inner Eyelid/Aperture Shadow -->
+  <path d="M 220 600 Q 512 430 804 600 Q 512 770 220 600 Z" fill="#0A0B0F" stroke="#1B1E27" stroke-width="8"/>
+
+  <!-- The Iris (Amber Ring) -->
+  <circle cx="512" cy="600" r="140" fill="#12141B" stroke="#FFB84D" stroke-width="16" filter="url(#glow-amber)"/>
+  
+  <!-- Mechanical Iris Detail Lines -->
+  <circle cx="512" cy="600" r="105" fill="none" stroke="#7C8494" stroke-width="4" stroke-dasharray="8 16"/>
+
+  <!-- The Pupil (QR / Fountain Data Matrix) -->
+  <g fill="#4DD9C0" filter="url(#glow-teal)">
+    <!-- Core Grid -->
+    <rect x="464" y="552" width="28" height="28" rx="6"/>
+    <rect x="504" y="552" width="28" height="28" rx="6"/>
+    <rect x="544" y="552" width="28" height="28" rx="6"/>
+    
+    <rect x="464" y="592" width="28" height="28" rx="6"/>
+    <!-- Center block is amber to look like a camera sensor core -->
+    <rect x="504" y="592" width="28" height="28" rx="6" fill="#FFB84D" filter="url(#glow-amber)"/>
+    <rect x="544" y="592" width="28" height="28" rx="6"/>
+    
+    <rect x="464" y="632" width="28" height="28" rx="6"/>
+    <rect x="504" y="632" width="28" height="28" rx="6"/>
+    <rect x="544" y="632" width="28" height="28" rx="6"/>
+
+    <!-- Scattered outer data blocks -->
+    <rect x="424" y="592" width="24" height="24" rx="4"/>
+    <rect x="588" y="592" width="24" height="24" rx="4"/>
+    <rect x="504" y="512" width="24" height="24" rx="4"/>
+    <rect x="504" y="672" width="24" height="24" rx="4"/>
+  </g>
+</svg>
