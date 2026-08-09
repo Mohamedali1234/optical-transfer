@@ -2,85 +2,114 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no"
-    />
-    <title>Optical Transfer — receive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+    <title>Decimen — receive</title>
+    <!-- Import the same fonts as the sender -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../shared/style.css" />
   </head>
   <body>
-    <!-- Back Button to Main Menu -->
-    <p><a href="../index.html" style="text-decoration: none; font-weight: bold;">← Go Back</a></p>
-
-    <h1>DECIMEN <small>— Fountain QR File Transfer</small></h1>
-    <div class="hint" id="stats">point the camera at the sender's code</div>
-    <details class="settings" id="settings">
-      <summary>Settings</summary>
-      <div class="row">
-        <label>
-          capture width
-          <select id="cfg-width">
-            <option>960</option>
-            <option selected>1280</option>
-            <option>1920</option>
-          </select>
-        </label>
-        <label>
-          capture fps
-          <select id="cfg-capfps">
-            <option>30</option>
-            <option selected>60</option>
-          </select>
-        </label>
-        <label>
-          decode workers
-          <select id="cfg-workers">
-            <option>1</option>
-            <option selected>2</option>
-            <option>3</option>
-          </select>
-        </label>
-        <label>
-          color mode (~3x)
-          <select id="cfg-color-rx">
-            <option selected value="off">off</option>
-            <option value="on">on</option>
-          </select>
-        </label>
-      </div>
-      <div class="hint" style="text-align: left; padding-top: 8px">
-        Must match the sender's color mode setting. Decodes 3 channels per frame,
-        so it costs roughly 3x the CPU per capture — drop a worker or the capture
-        width if it stutters.
-      </div>
-    </details>
-    
-    <!-- Action Buttons -->
-    <div style="display: flex; gap: 10px; margin-top: 15px;">
-      <button id="benchmark" style="flex: 1; background: #475569;">⚡ Benchmark Device</button>
-      <button id="start" style="flex: 2;">Start camera</button>
+    <div class="topbar">
+      <a class="back" href="../index.html" aria-label="Go back">←</a>
+      <div class="wordmark">Decimen<span class="dot">·</span><span class="sub">receive</span></div>
+      <div class="status-pill" id="rx-status">idle</div>
     </div>
 
-    <div class="metrics" id="metrics" style="display: none">
-      <div class="metric"><div class="k">capture fps</div><div class="v" id="m-cap">—</div></div>
-      <div class="metric"><div class="k">decode fps</div><div class="v amber" id="m-dec">—</div></div>
-      <div class="metric"><div class="k">goodput</div><div class="v amber" id="m-rate">—</div></div>
-      <div class="metric"><div class="k">elapsed</div><div class="v" id="m-time">—</div></div>
-      <div class="metric"><div class="k">est. remaining</div><div class="v amber" id="m-eta">—</div></div>
-      <div class="metric"><div class="k">frames new/dup</div><div class="v" id="m-frames">—</div></div>
-      <div class="metric"><div class="k">blocks K</div><div class="v" id="m-k">—</div></div>
-      <div class="metric"><div class="k">block len</div><div class="v" id="m-block">—</div></div>
-      <div class="metric"><div class="k">payload</div><div class="v" id="m-payload">—</div></div>
-    </div>
-    <div class="preview" id="preview" style="display: none">
-      <video id="video" muted playsinline></video>
-    </div>
-    <div class="progress" id="progress" style="display: none">
-      <div id="bar"></div>
-      <div id="progress-label" class="hint" style="text-align: center; margin-top: 4px;">0%</div>
-    </div>
-    <div id="result"></div>
+    <main class="deck">
+      <!-- We disguise the video preview inside the sender's stage-wrap -->
+      <section class="stage-wrap" id="preview" style="display: none">
+        <span class="corner tl"></span>
+        <span class="corner tr"></span>
+        <span class="corner bl"></span>
+        <span class="corner br"></span>
+        <span class="sweep"></span>
+        <div class="stage">
+          <video id="video" muted playsinline></video>
+        </div>
+      </section>
+
+      <p class="telemetry" id="stats">point the camera at the sender's code</p>
+
+      <details class="console" id="settings" open>
+        <summary>Settings</summary>
+        <div class="field-grid">
+          <div class="field">
+            <label for="cfg-width">capture width</label>
+            <select id="cfg-width">
+              <option>960</option>
+              <option selected>1280</option>
+              <option>1920</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="cfg-capfps">capture fps</label>
+            <select id="cfg-capfps">
+              <option>30</option>
+              <option selected>60</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="cfg-workers">decode workers</label>
+            <select id="cfg-workers">
+              <option>1</option>
+              <option selected>2</option>
+              <option>3</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="cfg-color-rx">color mode (~3x)</label>
+            <select id="cfg-color-rx">
+              <option selected value="off">off</option>
+              <option value="on">on</option>
+            </select>
+          </div>
+          <p class="note">
+            Must match the sender's color mode setting. Decodes 3 channels per frame,
+            so it costs roughly 3x the CPU per capture — drop a worker or the capture
+            width if it stutters.
+          </p>
+        </div>
+      </details>
+
+      <div class="field-grid" id="action-wrapper" style="width: 100%;">
+        <button id="benchmark" class="btn-secondary">⚡ Benchmark Device</button>
+        <button id="start" class="btn-primary">Start camera</button>
+      </div>
+
+      <div class="metrics-panel field-grid" id="metrics" style="display: none; width: 100%;">
+        <div class="metric"><div class="k">capture fps</div><div class="v" id="m-cap">—</div></div>
+        <div class="metric"><div class="k">decode fps</div><div class="v amber" id="m-dec">—</div></div>
+        <div class="metric"><div class="k">goodput</div><div class="v amber" id="m-rate">—</div></div>
+        <div class="metric"><div class="k">elapsed</div><div class="v" id="m-time">—</div></div>
+        <div class="metric"><div class="k">est. remaining</div><div class="v amber" id="m-eta">—</div></div>
+        <div class="metric"><div class="k">frames new/dup</div><div class="v" id="m-frames">—</div></div>
+        <div class="metric"><div class="k">blocks K</div><div class="v" id="m-k">—</div></div>
+        <div class="metric"><div class="k">block len</div><div class="v" id="m-block">—</div></div>
+        <div class="metric"><div class="k">payload</div><div class="v" id="m-payload">—</div></div>
+      </div>
+
+      <div class="progress" id="progress" style="display: none; width: 100%;">
+        <div class="bar-track">
+          <div id="bar"></div>
+        </div>
+        <div id="progress-label" class="telemetry" style="margin-top: 8px;">0%</div>
+      </div>
+
+      <div id="result" style="width: 100%;"></div>
+    </main>
+
     <script type="module" src="./main.ts"></script>
+    <script>
+      // UI Polish: Triggers the scanning laser and status pill when starting
+      document.getElementById('start').addEventListener('click', () => {
+        const rxStatus = document.getElementById('rx-status');
+        rxStatus.textContent = 'live';
+        rxStatus.classList.add('live');
+        document.getElementById('preview').classList.add('live');
+        document.getElementById('action-wrapper').style.display = 'none';
+      });
+    </script>
   </body>
 </html>
