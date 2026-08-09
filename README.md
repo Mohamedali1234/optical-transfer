@@ -27,7 +27,8 @@
 
 ---
 
-OpticDrop: Quick & Easy Guide
+##  OpticDrop: Quick & Easy Guide
+
 A simple, plain-English guide to every setting in OpticDrop and the best choices to make for a smooth transfer.
 1. Select File
  * What it is: The file you want to send.
