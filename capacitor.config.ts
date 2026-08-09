@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.example.app',
-  appName: 'decimen-optical-transfer',
+  appId: 'com.opticdrop.app',
+  appName: 'OpticDrop',
   webDir: 'dist'
 };
 
