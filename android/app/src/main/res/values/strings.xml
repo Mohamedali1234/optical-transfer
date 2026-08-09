@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">decimen-optical-transfer</string>
-    <string name="title_activity_main">decimen-optical-transfer</string>
-    <string name="package_name">com.example.app</string>
-    <string name="custom_url_scheme">com.example.app</string>
+    <string name="app_name">OpticDrop</string>
+    <string name="title_activity_main">OpticDrop</string>
+    <string name="package_name">com.opticdrop.app</string>
+    <string name="custom_url_scheme">com.opticdrop.app</string>
 </resources>
