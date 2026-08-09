@@ -24,4 +24,3 @@
 * **Fountain-Coded Resilience:** Dropped frames, glare, or momentary misalignments never break the transfer. Every frame is a self-contained randomized piece of the puzzle.
 * **Multi-Lane Grid Layout:** Adapts dynamically to screen size and device orientation, supporting 1, 2, 3, or 4 parallel visual transmission channels.
 * **High-Throughput Color Mode:** Triples effective bandwidth by multiplexing data across RGB channels with automatic color calibration.
-* **Cross-Platform Portability:** Built to run smoothly across desktop browsers, mobile web, and native mobile wrappers.
