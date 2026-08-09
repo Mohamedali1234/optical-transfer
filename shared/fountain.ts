@@ -19,6 +19,12 @@ import { splitmix32 } from "./protocol";
 
 const LN2 = 0.6931471805599453;
 
+// Expected frames needed to finish ≈ K × this factor (robust-soliton slack).
+// Shared by the receiver's decode-progress math and the sender's ETA
+// estimate — keep both in sync with this one constant.
+export const OVERHEAD_EST = 1.18;
+
+
 /** Deterministic natural log: exact-ops range reduction + atanh series. */
 function dlog(x: number): number {
   let e = 0;
