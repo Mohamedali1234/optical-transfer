@@ -18,11 +18,9 @@ const cfgLanes = document.getElementById("cfg-lanes") as HTMLSelectElement;
 const cfgFps = document.getElementById("cfg-fps") as HTMLInputElement;
 const cfgBytes = document.getElementById("cfg-bytes") as HTMLSelectElement;
 const cfgEcc = document.getElementById("cfg-ecc") as HTMLSelectElement;
-const cfgSize = document.getElementById("cfg-size") as HTMLInputElement;
 const cfgColor = document.getElementById("cfg-color") as HTMLSelectElement;
 
 const fpsReadout = document.getElementById("fps-readout")!;
-const sizeReadout = document.getElementById("size-readout")!;
 const txStatus = document.getElementById("tx-status")!;
 const stageWrap = document.getElementById("stage-wrap")!;
 
@@ -120,19 +118,14 @@ async function main() {
   cfgFile.addEventListener("change", syncImgSizeVisibility);
   syncImgSizeVisibility();
 
-  // Live numeric readouts while dragging — these don't restart the stream
-  // themselves; the 'change' listener below (fired on release) does that.
+  // Live numeric readouts while dragging FPS
   fpsReadout.textContent = `${cfgFps.value} fps`;
   cfgFps.addEventListener("input", () => {
     fpsReadout.textContent = `${cfgFps.value} fps`;
   });
-  sizeReadout.textContent = `${cfgSize.value}px`;
-  cfgSize.addEventListener("input", () => {
-    sizeReadout.textContent = `${cfgSize.value}px`;
-  });
 
-  // Re-bound all settings to trigger stream restarts
-  for (const el of [cfgFile, cfgImgSize, cfgLanes, cfgFps, cfgBytes, cfgEcc, cfgSize, cfgColor]) {
+  // Re-bound remaining settings to trigger stream restarts
+  for (const el of [cfgFile, cfgImgSize, cfgLanes, cfgFps, cfgBytes, cfgEcc, cfgColor]) {
     el.addEventListener("change", () => void startStream());
   }
   
@@ -164,7 +157,7 @@ async function startStream() {
   const txFps = Number(cfgFps.value);
   const frameBytes = Number(cfgBytes.value);
   const ecc = cfgEcc.value as "L" | "M" | "Q" | "H";
-  const displayPx = Number(cfgSize.value);
+  const displayPx = 800; // Hardcoded optimal QR display size
   const colorMode = cfgColor.value === "on";
   const shrinkNote = shrunk
     ? ` · shrunk ${Math.round(file.size / 1024)}→${Math.round(payload.length / 1024)} KB`
@@ -267,9 +260,6 @@ async function startStream() {
     // Auto-resize when you rotate your phone!
     window.addEventListener('resize', sizeCanvas);
 
-    // Rough estimate assuming every emitted frame decodes cleanly — a real
-    // transfer will be slower once dropped/misread frames are accounted for,
-    // so treat this as a best case, not a promise.
     const bytesPerSec = lanes * frameBytes * txFps * (colorMode ? 3 : 1);
     const etaSeconds = (payload.length * OVERHEAD_EST) / bytesPerSec;
 
@@ -302,12 +292,6 @@ async function startStream() {
     return img;
   };
 
-  // Packs 3 independent fountain frames (seq, seq+1, seq+2) into the R/G/B
-  // bitplanes of one code — same screen footprint, ~3x the data. The
-  // receiver must split channels back out before handing each to zxing,
-  // since a raw color image just decodes as grayscale mush. A calibration
-  // band (black/white/R/G/B patches) below the code lets the receiver
-  // correct for white-balance drift using the QR's own decoded geometry.
   const makeFrameColor = (): ImageData => {
     const bytes0 = packFrame({ ...header, seq: nextSeq }, encoder.encode(nextSeq));
     const bytes1 = packFrame({ ...header, seq: nextSeq + 1 }, encoder.encode(nextSeq + 1));
@@ -343,8 +327,6 @@ async function startStream() {
       }
     }
 
-    // Calibration band: SWATCH_COUNT solid patches spanning the tile width,
-    // directly beneath the QR + quiet zone.
     const patchW = Math.ceil(qrTotal / SWATCH_COUNT);
     for (let y = qrTotal; y < tileH; y++) {
       const row = y * qrTotal;
@@ -397,7 +379,6 @@ async function startStream() {
 
     const { tileW, tileH } = tileDims();
     
-    // Pop and draw `lanes` amount of frames onto the dynamic grid
     for (let i = 0; i < lanes; i++) {
       const img = queue.shift();
       if (!img) break;
