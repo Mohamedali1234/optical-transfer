@@ -15,11 +15,16 @@ const specs = document.getElementById("specs")!;
 const cfgFile = document.getElementById("cfg-file") as HTMLInputElement;
 const cfgImgSize = document.getElementById("cfg-imgsize") as HTMLSelectElement;
 const cfgLanes = document.getElementById("cfg-lanes") as HTMLSelectElement;
-const cfgFps = document.getElementById("cfg-fps") as HTMLSelectElement;
+const cfgFps = document.getElementById("cfg-fps") as HTMLInputElement;
 const cfgBytes = document.getElementById("cfg-bytes") as HTMLSelectElement;
 const cfgEcc = document.getElementById("cfg-ecc") as HTMLSelectElement;
 const cfgSize = document.getElementById("cfg-size") as HTMLInputElement;
 const cfgColor = document.getElementById("cfg-color") as HTMLSelectElement;
+
+const fpsReadout = document.getElementById("fps-readout")!;
+const sizeReadout = document.getElementById("size-readout")!;
+const txStatus = document.getElementById("tx-status")!;
+const stageWrap = document.getElementById("stage-wrap")!;
 
 const payloadCache = new Map<string, Uint8Array>();
 let generation = 0; // bumped on every restart; stale loops see it and die
@@ -115,6 +120,17 @@ async function main() {
   cfgFile.addEventListener("change", syncImgSizeVisibility);
   syncImgSizeVisibility();
 
+  // Live numeric readouts while dragging — these don't restart the stream
+  // themselves; the 'change' listener below (fired on release) does that.
+  fpsReadout.textContent = `${cfgFps.value} fps`;
+  cfgFps.addEventListener("input", () => {
+    fpsReadout.textContent = `${cfgFps.value} fps`;
+  });
+  sizeReadout.textContent = `${cfgSize.value}px`;
+  cfgSize.addEventListener("input", () => {
+    sizeReadout.textContent = `${cfgSize.value}px`;
+  });
+
   // Re-bound all settings to trigger stream restarts
   for (const el of [cfgFile, cfgImgSize, cfgLanes, cfgFps, cfgBytes, cfgEcc, cfgSize, cfgColor]) {
     el.addEventListener("change", () => void startStream());
@@ -129,6 +145,9 @@ async function startStream() {
 
   // Grab the wake lock now that the user has interacted by picking a file!
   requestWakeLock();
+  txStatus.textContent = "live";
+  txStatus.classList.add("live");
+  stageWrap.classList.add("live");
 
   const gen = ++generation;
   
