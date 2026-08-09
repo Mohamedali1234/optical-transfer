@@ -12,6 +12,7 @@ const canvas = document.getElementById("qr") as HTMLCanvasElement;
 const specs = document.getElementById("specs")!;
 
 const cfgFile = document.getElementById("cfg-file") as HTMLInputElement;
+const cfgImgSize = document.getElementById("cfg-imgsize") as HTMLSelectElement;
 const cfgLanes = document.getElementById("cfg-lanes") as HTMLSelectElement;
 const cfgFps = document.getElementById("cfg-fps") as HTMLSelectElement;
 const cfgBytes = document.getElementById("cfg-bytes") as HTMLSelectElement;
@@ -55,9 +56,66 @@ async function loadPayload(source: string | File): Promise<Uint8Array | null> {
   return bytes;
 }
 
+const IMG_SIZE_PRESETS: Record<string, { maxDim: number; quality: number } | undefined> = {
+  large: { maxDim: 1920, quality: 0.85 },
+  medium: { maxDim: 1280, quality: 0.8 },
+  small: { maxDim: 800, quality: 0.72 },
+};
+
+/** Downscales + re-compresses an image file before it ever reaches the
+ * fountain encoder. Fewer payload bytes means fewer QR frames, which is the
+ * single biggest lever on total transfer time — much bigger than tuning fps
+ * or lanes. Only touches actual image files; everything else, and "original",
+ * passes straight through. Always outputs JPEG (so transparency is lost —
+ * fine for photos, not for icons/screenshots with transparent backgrounds). */
+async function shrinkImageIfNeeded(
+  file: File,
+  preset: string,
+): Promise<{ bytes: Uint8Array; name: string } | null> {
+  const cfg = IMG_SIZE_PRESETS[preset];
+  if (!cfg || !file.type.startsWith("image/")) return null;
+
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, cfg.maxDim / Math.max(bitmap.width, bitmap.height));
+    if (scale >= 1 && file.type === "image/jpeg") {
+      bitmap.close();
+      return null; // already small enough and already JPEG — nothing to gain
+    }
+    const w = Math.max(1, Math.round(bitmap.width * scale));
+    const h = Math.max(1, Math.round(bitmap.height * scale));
+
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const cctx = canvas.getContext("2d")!;
+    cctx.drawImage(bitmap, 0, 0, w, h);
+    bitmap.close();
+
+    const blob: Blob | null = await new Promise((resolve) =>
+      canvas.toBlob(resolve, "image/jpeg", cfg.quality),
+    );
+    if (!blob || blob.size >= file.size) return null; // no actual win, skip
+
+    const bytes = new Uint8Array(await blob.arrayBuffer());
+    const name = `${file.name.replace(/\.[^./]+$/, "")}.jpg`;
+    return { bytes, name };
+  } catch {
+    return null; // unsupported format (e.g. some HEIC) — fall back to original
+  }
+}
+
 async function main() {
+  const imgSizeRow = document.getElementById("cfg-imgsize-row") as HTMLElement;
+  const syncImgSizeVisibility = () => {
+    const file = cfgFile.files?.[0];
+    imgSizeRow.style.display = file && file.type.startsWith("image/") ? "" : "none";
+  };
+  cfgFile.addEventListener("change", syncImgSizeVisibility);
+  syncImgSizeVisibility();
+
   // Re-bound all settings to trigger stream restarts
-  for (const el of [cfgFile, cfgLanes, cfgFps, cfgBytes, cfgEcc, cfgSize, cfgColor]) {
+  for (const el of [cfgFile, cfgImgSize, cfgLanes, cfgFps, cfgBytes, cfgEcc, cfgSize, cfgColor]) {
     el.addEventListener("change", () => void startStream());
   }
   
@@ -73,7 +131,8 @@ async function startStream() {
 
   const gen = ++generation;
   
-  const payload = await loadPayload(file);
+  const shrunk = await shrinkImageIfNeeded(file, cfgImgSize.value);
+  const payload = shrunk ? shrunk.bytes : await loadPayload(file);
   if (!payload) {
     specs.textContent = `✗ couldn't load ${file.name}`;
     return;
@@ -87,6 +146,9 @@ async function startStream() {
   const ecc = cfgEcc.value as "L" | "M" | "Q" | "H";
   const displayPx = Number(cfgSize.value);
   const colorMode = cfgColor.value === "on";
+  const shrinkNote = shrunk
+    ? ` · shrunk ${Math.round(file.size / 1024)}→${Math.round(payload.length / 1024)} KB`
+    : "";
 
   const sessionId = (Math.floor(Math.random() * 0xffff) + 1) & 0xffff;
   const blockLen = frameBytes - HEADER_LEN;
@@ -99,7 +161,7 @@ async function startStream() {
     blockLen,
     totalLen: payload.length,
     payloadFnv: fnv1a(payload),
-    fileName: file.name, 
+    fileName: shrunk ? shrunk.name : file.name, 
   };
 
   let version: number | undefined; 
@@ -186,7 +248,7 @@ async function startStream() {
     window.addEventListener('resize', sizeCanvas);
     specs.textContent =
       `${lanes} Lane(s) @ ${txFps} FPS · ${frameBytes} B/frame · V${version} · ECC ${ecc} · ` +
-      `${Math.round(payload.length / 1024)} KB · K=${encoder.k}${throughputNote}`;
+      `${Math.round(payload.length / 1024)} KB · K=${encoder.k}${shrinkNote}${throughputNote}`;
   };
 
   const makeFrameMono = (): ImageData => {
